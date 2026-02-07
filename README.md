@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# This Project is based on Chronos Web Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+a modern **web-based configuration and control dashboard for Chronos ESP32**
 
-Currently, two official plugins are available:
+This project allows you to **connect to a Chronos ESP32 directly from the browser**, control device settings, and **upload GIF animations** to the device display using standard browser APIs -- no native apps, no drivers, no backend required.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-🔌Connect to Chronos ESP32 via **Web Serial API**
 
-## Expanding the ESLint configuration
+- 🎛 Control device settings (brightness, modes, etc.)
+- 📊 Read device info (battery, status)
+- 🖼 Upload **GIF animations** from the browser
+- 🎞 Client-side GIF decoding & RGB565 conversion
+- 🧩 Clean command-based protocol between web ↔ hardware
+- 🎨 Modern UI using **shadcn/ui + Tailwind**
+- ⚡ Bun-powered development workflow
+- 🧠 Fully written in **TypeScript**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧠 How It Works
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Communication Flow
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Browser (React + TS)
+↓ Web Serial API
+Chronos ESP32 (USB)
+↓
+Display / Storage / Sensors
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The browser communicates directly with the Chronos device using:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Web Serial API** for USB communication
+- A custom **text + binary protocol** for commands and data transfer
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+No code from other projects is reused — everything is implemented independently.
+
+---
+
+## 🖼 GIF Upload Pipeline
+
+Uploading a GIF works like this:
+
+GIF file
+→ Decoded in browser
+→ Frames extracted
+→ Converted to RGB565
+→ Sent frame-by-frame over Serial
+→ Rendered on Chronos display
+
+This approach keeps the firmware simple and leverages browser performance for heavy processing.
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend
+
+- **Bun**
+- **Vite**
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **Zustand** (state management)
+
+### Hardware
+
+- **Chronos ESP32**
+- Arduino / PlatformIO firmware
+- TFT display (RGB565)
+
+---
